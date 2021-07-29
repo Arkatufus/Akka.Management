@@ -7,6 +7,11 @@
 
   <ItemGroup>
     <PackageReference Include="Akka.Cluster" Version="$(AkkaVersion)" />
+    <PackageReference Include="Grpc.Core" Version="2.38.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Internal" />
   </ItemGroup>
 
 </Project>

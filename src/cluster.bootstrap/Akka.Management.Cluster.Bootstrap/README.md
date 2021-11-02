@@ -12,9 +12,16 @@ Cluster bootstrap depends on:
 ## Usage
 Akka management must be started as well as the bootstrap process, this can either be done through config or programmatically.
 
+### Exposed Akka.Management REST API Endpoint
+
+`Akka.Management.Cluster.Bootstrap` will add a new REST HTTP API endpoint to the `Akka.Management` HTTP
+server at the address `http://{host}:{port}/bootstrap/seed-nodes`. Calling a GET on this endpoint will
+return a JSON document containing the Akka cluster address of the node and a list of up to 5 seed nodes
+from the that Akka node.
+
 ### Setting Up Cluster.Bootstrap from HOCON Configuration
 
-Listing the ClusterBootstrap extension among the autoloaded akka.extensions in your configuration will cause it to autostart:
+Listing the ClusterBootstrap extension among the auto-loaded akka.extensions in your configuration will cause it to autostart:
 
 ```
 # trigger autostart by loading the extension through config
@@ -40,12 +47,6 @@ The following configuration is required, more details for each and additional co
   cluster instance which is used to lookup peers in service discovery. If unset, it will be derived from the ActorSystem name.
 - `akka.management.cluster.bootstrap.contact-point-discovery.discovery-method`: the intended service discovery mechanism 
   (from what choices [Akka Discovery](https://getakka.net/articles/discovery/index.html) provides). If unset, falls back to the system-wide default from akka.discovery.method.
-
-### Exposed Akka.Management REST API Endpoint
-`Akka.Management.Cluster.Bootstrap` will add a new REST HTTP API endpoint to the `Akka.Management` HTTP 
-server at the address `http://{host}:{port}/bootstrap/seed-nodes`. Calling a GET on this endpoint will 
-return a JSON document containing the Akka cluster address of the node and a list of up to 5 seed nodes 
-from the that Akka node.
 
 ## How It Works
 

@@ -10,6 +10,24 @@ AkkaManagement.Get(system).Start();
 This allows users to prepare anything further before exposing routes for the bootstrap joining process and other purposes.
 Please note that once it is started, you can not add or expose more routes on the HTTP endpoint.
 
+## Exposed REST API Endpoints
+Two Akka.Management REST API endpoints are exposed by default, the health check endpoint
+ and readiness check endpoint: 
+
+- Health check endpoint
+  - API URL: `http://{host}:{port}/health`
+  - Returns [200-OK] when all of its callbacks returns a `Done` instance.
+  - Returns [500-Internal Server Error] when any of the callbacks returned a string. Any error messages will
+    be added in the response body.
+  - Endpoint path can be modified using the `akka.management.health-checks.readiness-path = "/ready"` settings
+
+- Live check endpoint
+  - API URL: `http://{host}:{port}/alive`
+  - Returns [200-OK] when all of its callbacks returns a `Done` instance.
+  - Returns [500-Internal Server Error] when any of the callbacks returned a string. Any error messages will
+    be added in the response body.
+  - Endpoint path can be modified using the `akka.management.health-checks.liveness-path = "/alive"` settings
+
 ## Basic Configuration
 You can configure hostname and port to use for the HTTP Cluster management by overriding the following:
 ```
@@ -27,13 +45,6 @@ number to bind for the HTTP Server for Http Cluster Management:
   akka.management.http.bind-hostname = 0.0.0.0
   akka.management.http.bind-port = 8558
 ```
-
-## Exposed REST API Endpoints
-Two Akka.Management REST API endpoints are exposed by default, the health check endpoint at 
-`http://{host}:{port}/health` and readiness check endpoint at `http://{host}:{port}/alive`; endpoint
-paths are configurable inside the HOCON configuration. Both endpoints will return a 200-OK if all of 
-its callbacks returns a `Done` instance. If any of the callbacks returns a string, the endpoint will 
-return a 500-Internal Server Error code and includes the string reason message inside the HTTP body.
 
 ## Security
 

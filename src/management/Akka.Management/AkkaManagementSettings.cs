@@ -31,10 +31,14 @@ namespace Akka.Management
             var hostname = cc.GetString("hostname");
             if (string.IsNullOrWhiteSpace(hostname) || hostname.Equals("<hostname>"))
             {
-                var addresses = Dns.GetHostAddresses(Dns.GetHostName());
-                hostname = addresses
-                    .First(ip => !Equals(ip, IPAddress.Any) && !Equals(ip, IPAddress.IPv6Any))
-                    .ToString();
+                hostname = config.GetString("akka.remote.dot-netty.tcp.public-hostname");
+                if (string.IsNullOrWhiteSpace(hostname))
+                {
+                    var addresses = Dns.GetHostAddresses(Dns.GetHostName());
+                    hostname = addresses
+                        .First(ip => !Equals(ip, IPAddress.Any) && !Equals(ip, IPAddress.IPv6Any))
+                        .ToString();
+                }
             }
             Hostname = hostname;
 

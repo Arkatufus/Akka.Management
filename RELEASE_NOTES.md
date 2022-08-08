@@ -5,6 +5,7 @@
 * [[Http.Shim] Replace internal HTTP server from Kestrel to Ceen.Httpd](https://github.com/akkadotnet/Akka.Management/pull/729)
 * [[Management] Add programmatic setup to Akka.Management](https://github.com/akkadotnet/Akka.Management/pull/731)
 * NuGet package version updates:
+  * [Update AWSSDK.CloudFormation from 3.7.11.9 to 3.7.11.12](https://github.com/akkadotnet/Akka.Management/pull/739)
   * [Update AWSSDK.EC2 from 3.7.79.2 to 3.7.80.2](https://github.com/akkadotnet/Akka.Management/pull/733)
   * [Update AWSSDK.ECS from 3.7.5.57 to 3.7.5.60](https://github.com/akkadotnet/Akka.Management/pull/732)
   * [Update Azure.Data.Tables from 12.6.0 to 12.6.1](https://github.com/akkadotnet/Akka.Management/pull/718)

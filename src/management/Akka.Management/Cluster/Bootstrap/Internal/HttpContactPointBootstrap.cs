@@ -100,53 +100,35 @@ namespace Akka.Management.Cluster.Bootstrap.Internal
             Receive<ProbeTick>(_ =>
             {
                 _log.Debug("Probing [{0}] for seed nodes...", _probeRequest);
-                var self = Self;
+                ExecuteProbe().PipeTo(Self);
+                return;
 
-                var getTask = _http.GetAsync(_probeRequest, _cancellationTokenSource.Token);
-                getTask.ContinueWith(task =>
+                async Task<HttpBootstrapJsonProtocol.SeedNodes> ExecuteProbe()
                 {
-                    if (_stopped) return (Status) new Status.Failure(new TaskCanceledException("Actor already stopped."));
-
-                    if (task.IsCanceled)
+                    try
                     {
-                        return new Status.Failure(new TimeoutException($"Probing timeout of [{_baseUri}]"));
-                    }
-
-                    if (task.Exception != null)
-                    {
-                        foreach (var e in task.Exception.Flatten().InnerExceptions)
-                        {
-                            switch (e)
-                            {
-                                case TaskCanceledException _:
-                                    return new Status.Failure(new TimeoutException($"Probing timeout of [{_baseUri}]"));
-                                case SocketException se:
-                                    if (se.SocketErrorCode == SocketError.ConnectionRefused)
-                                    {
-                                        return new Status.Failure(se);
-                                    }
-                                    break;
-                            }
-                        }
-                        return new Status.Failure(task.Exception);
-                    }
-                    
-                    var response = task.Result;
-                    var bodyTask = response.Content.ReadAsStringAsync();
-                    bodyTask.Wait();
-                    var body = bodyTask.Result;
-                    if (response.StatusCode == HttpStatusCode.OK)
-                    {
+                        // never forget to dispose the HttpResponseMessage object
+                        using var response = await _http.GetAsync(_probeRequest, _cancellationTokenSource.Token);
+                        var body = await response.Content.ReadAsStringAsync();
+                        if (response.StatusCode != HttpStatusCode.OK)
+                            throw new IllegalStateException(
+                                $"Expected response '200 OK' but found [{(int)response.StatusCode} {response.StatusCode}]. Body: '{body}'");
+                        
                         var nodes = JsonConvert.DeserializeObject<HttpBootstrapJsonProtocol.SeedNodes>(body);
-                        if(nodes?.SelfNode == null)
-                            return new Status.Failure(new IllegalStateException(
-                                $"Failed to deserialize HTTP response, Self node address is empty. [{(int) response.StatusCode} {response.StatusCode}]. Body: '{body}'"));
-                        return new Status.Success(nodes);
+                        if (nodes?.SelfNode is null)
+                            throw new IllegalStateException(
+                                $"Failed to deserialize HTTP response, Self node address is empty. [{(int)response.StatusCode} {response.StatusCode}]. Body: '{body}'");
+                        return nodes;
                     }
-                    return new Status.Failure(new IllegalStateException(
-                        $"Expected response '200 OK' but found [{(int) response.StatusCode} {response.StatusCode}]. Body: '{body}'"));
-                    
-                }, TaskContinuationOptions.ExecuteSynchronously).PipeTo(self);
+                    catch (TaskCanceledException ex)
+                    {
+                        throw new TimeoutException($"Probing timeout of [{_baseUri}]", ex);
+                    }
+                    catch (TimeoutException ex)
+                    {
+                        throw new TimeoutException($"Probing timeout of [{_baseUri}]", ex);
+                    } 
+                }
             });
 
             Receive<Status.Failure>(fail =>
@@ -169,11 +151,10 @@ namespace Akka.Management.Cluster.Bootstrap.Internal
                 }
             });
 
-            Receive<Status.Success>(success =>
+            Receive<HttpBootstrapJsonProtocol.SeedNodes>(nodes =>
             {
                 if (_stopped) return;
                 
-                var nodes = (HttpBootstrapJsonProtocol.SeedNodes) success.Status;
                 NotifyParentAboutSeedNodes(nodes);
                 ResetProbingKeepFailingWithinDeadline();
                 // we keep probing and looking if maybe a cluster does form after all
@@ -194,7 +175,11 @@ namespace Akka.Management.Cluster.Bootstrap.Internal
         {
             _stopped = true;
             _cancellationTokenSource.Cancel();
+            
+            // HttpClient is linked to _cancellationTokenSource, so it should be stopped
+            _http.Dispose();
             _cancellationTokenSource.Dispose();
+            
             Timers!.CancelAll();
             base.PostStop();
         }

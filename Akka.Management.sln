@@ -90,6 +90,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Akka.Coordination.Azure.Tes
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Azure.StressTest", "src\coordination\examples\azure\Azure.StressTest\Azure.StressTest.csproj", "{296A0309-2370-4153-B3B0-A4105622CC9A}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ceen", "ceen", "{89F958CC-6379-4EEC-90CA-AE82F2DB883E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ceen.Common", "src\ceen\Ceen.Common\Ceen.Common.csproj", "{764D32F0-7212-4244-8208-84C0A255E25F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ceen.Httpd", "src\ceen\Ceen.Httpd\Ceen.Httpd.csproj", "{8FB1A83C-B816-433F-BE06-139B523D1AF6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -180,6 +186,14 @@ Global
 		{296A0309-2370-4153-B3B0-A4105622CC9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{296A0309-2370-4153-B3B0-A4105622CC9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{296A0309-2370-4153-B3B0-A4105622CC9A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{764D32F0-7212-4244-8208-84C0A255E25F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{764D32F0-7212-4244-8208-84C0A255E25F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{764D32F0-7212-4244-8208-84C0A255E25F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{764D32F0-7212-4244-8208-84C0A255E25F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8FB1A83C-B816-433F-BE06-139B523D1AF6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8FB1A83C-B816-433F-BE06-139B523D1AF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8FB1A83C-B816-433F-BE06-139B523D1AF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8FB1A83C-B816-433F-BE06-139B523D1AF6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -214,6 +228,8 @@ Global
 		{55BB0B68-1364-41EB-A9AA-AB054FB39329} = {00CE6BBE-BFAD-452A-82A5-826F7B99F5FB}
 		{296A0309-2370-4153-B3B0-A4105622CC9A} = {C4C8BE03-A7C0-4F2E-8922-92854FE7A5BF}
 		{24FEBA95-1FC2-4AC2-8386-6AB13AE87056} = {9B10ADF5-60D1-4EED-9E98-9CB2E1E84E98}
+		{764D32F0-7212-4244-8208-84C0A255E25F} = {89F958CC-6379-4EEC-90CA-AE82F2DB883E}
+		{8FB1A83C-B816-433F-BE06-139B523D1AF6} = {89F958CC-6379-4EEC-90CA-AE82F2DB883E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B99E6BB8-642A-4A68-86DF-69567CBA700A}

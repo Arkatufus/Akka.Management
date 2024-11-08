@@ -242,16 +242,14 @@ namespace Akka.Coordination.KubernetesApi
                         if(_log.IsDebugEnabled)
                             _log.Debug("[Idle] Received Acquire, ReadRequired.");
                         _client.ReadOrCreateLeaseResource(leaseName)
-                            .ContinueWith(task => new ReadResponse(task.Result))
-                            .PipeTo(Self, failure: FlattenAggregateException);
+                            .PipeTo(Self, success:result => new ReadResponse(result), failure: FlattenAggregateException);
                         return GoTo(PendingRead.Instance)
                             .Using(new PendingReadData(Sender, acquire.LeaseLostCallback));
                     case LeaseCleared cleared:
                         if(_log.IsDebugEnabled)
                             _log.Debug("[Idle] Received Acquire, LeaseCleared.");
                         _client.UpdateLeaseResource(leaseName, _ownerName, cleared.Version)
-                            .ContinueWith(task => new WriteResponse(task.Result))
-                            .PipeTo(Self, failure: FlattenAggregateException);
+                            .PipeTo(Self, success:result => new WriteResponse(result), failure: FlattenAggregateException);
                         return GoTo(Granting.Instance)
                             .Using(new OperationInProgress(Sender, cleared.Version, acquire.LeaseLostCallback));
                     default:
@@ -366,8 +364,7 @@ namespace Akka.Coordination.KubernetesApi
                     // Try again as lock version has moved on but is not taken
                     who.Tell(LeaseAcquired.Instance);
                     _client.UpdateLeaseResource(leaseName, _ownerName, version)
-                        .ContinueWith(t => new WriteResponse(t.Result))
-                        .PipeTo(Self, failure: FlattenAggregateException);
+                        .PipeTo(Self, success:result => new WriteResponse(result), failure: FlattenAggregateException);
                     return Stay();
                 }
                 // The audacity, someone else has taken the lease :(
@@ -388,8 +385,7 @@ namespace Akka.Coordination.KubernetesApi
                     case Heartbeat _:
                         _log.Debug("Heartbeat: updating lease time. Version {0}", version);
                         _client.UpdateLeaseResource(leaseName, _ownerName, version)
-                            .ContinueWith(t => new WriteResponse(t.Result))
-                            .PipeTo(Self, failure: FlattenAggregateException);
+                            .PipeTo(Self, success:result => new WriteResponse(result), failure: FlattenAggregateException);
                         return Stay();
                     
                     case WriteResponse {Response: Right<LeaseResource, LeaseResource> resource}:
@@ -414,8 +410,7 @@ namespace Akka.Coordination.KubernetesApi
                         
                     case Release _:
                         _client.UpdateLeaseResource(leaseName, "", version)
-                            .ContinueWith(t => new WriteResponse(t.Result))
-                            .PipeTo(Self, failure: FlattenAggregateException);
+                            .PipeTo(Self, success:result => new WriteResponse(result), failure: FlattenAggregateException);
                         return GoTo(Releasing.Instance).Using(new OperationInProgress(Sender, version, leaseLost));
                     
                     case Acquire acquire:
@@ -429,7 +424,7 @@ namespace Akka.Coordination.KubernetesApi
             
             When(Releasing.Instance, @event =>
             {
-                if (!(@event.FsmEvent is WriteResponse writeResponse))
+                if (@event.FsmEvent is not WriteResponse writeResponse)
                     return null;
                 
                 // FIXME deal with failure from releasing the lock, currently handled in whenUnhandled but could retry to remove: https://github.com/lightbend/akka-commercial-addons/issues/502
@@ -524,9 +519,9 @@ namespace Akka.Coordination.KubernetesApi
             base.PreStart();
         }
 
-        private Status.Failure FlattenAggregateException(Exception e)
+        private static Status.Failure FlattenAggregateException(Exception e)
         {
-            if (!(e is AggregateException agg)) 
+            if (e is not AggregateException agg) 
                 return new Status.Failure(e);
             
             agg = agg.Flatten();
@@ -551,8 +546,7 @@ namespace Akka.Coordination.KubernetesApi
         private State<IState, IData> TryGetLease(string version, IActorRef reply, Action<Exception?> leaseLost)
         {
             _client.UpdateLeaseResource(_leaseName, _ownerName, version)
-                .ContinueWith(t => new WriteResponse(t.Result))
-                .PipeTo(Self, failure: FlattenAggregateException);
+                .PipeTo(Self, success:result => new WriteResponse(result), failure: FlattenAggregateException);
             return GoTo(Granting.Instance).Using(new OperationInProgress(reply, version, leaseLost));
         }
 

@@ -97,7 +97,7 @@ namespace Akka.Coordination.KubernetesApi.Internal
         public async Task<Either<LeaseResource, LeaseResource>> UpdateLeaseResource(
             string leaseName, string ownerName, string version, DateTime? time = null)
         {
-            var cts = new CancellationTokenSource(_settings.BodyReadTimeout);
+            using var cts = new CancellationTokenSource(_settings.BodyReadTimeout);
             try
             {
                 var leaseBody = new LeaseCustomResource(
@@ -117,20 +117,20 @@ namespace Akka.Coordination.KubernetesApi.Internal
                     .ConfigureAwait(false);
                 var newLease = operationResponse.Body;
 #else
-                var operationResponse = await _client.ReplaceNamespacedCustomObjectAsync(
+                var newLease = await _client.ReplaceNamespacedCustomObjectAsync(
                     body: leaseBody,
-                    @group: _crd.Group,
+                    group: _crd.Group,
                     version: _crd.Version,
                     namespaceParameter: _namespace,
                     plural: _crd.PluralName,
                     name: leaseName,
                     cancellationToken: cts.Token
                 );
-                var newLease = operationResponse;
 #endif
 
-                _log.Debug("Lease after update: {0}", JsonConvert.SerializeObject(newLease));
-                return new Right<LeaseResource, LeaseResource>(ToLeaseResource(newLease));
+                var lease = ToLeaseResource(newLease);
+                _log.Debug("Lease after update: {0}", lease);
+                return new Right<LeaseResource, LeaseResource>(lease);
             }
             catch (HttpOperationException e)
             {

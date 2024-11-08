@@ -27,6 +27,9 @@ namespace Akka.Coordination.KubernetesApi.Models
             Kind = "Lease";
             ApiVersion = "akka.io/v1";
         }
+
+        public override string ToString()
+            => $"{{owner:{Spec.Owner}, version:{Metadata.ResourceVersion}, time:{Spec.Time}}}";
     }
 
     internal sealed class LeaseSpec

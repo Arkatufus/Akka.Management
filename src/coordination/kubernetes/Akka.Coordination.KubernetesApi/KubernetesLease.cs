@@ -66,7 +66,7 @@ namespace Akka.Coordination.KubernetesApi
             var client = new KubernetesApiImpl(system, kubernetesSettings);
             _timeout = _settings.TimeoutSettings.OperationTimeout;
             _leaseName = MakeDns1039Compatible(settings.LeaseName);
-            _leaseActor = system.ActorOf(
+            _leaseActor = system.SystemActorOf(
                 LeaseActor.Props(client, settings, _leaseName, leaseTaken),
                 $"KubernetesLease{LeaseCounter.GetAndIncrement()}");
             

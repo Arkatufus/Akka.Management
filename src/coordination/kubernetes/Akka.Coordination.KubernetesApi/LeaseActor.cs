@@ -432,7 +432,7 @@ namespace Akka.Coordination.KubernetesApi
                 if (!(@event.FsmEvent is WriteResponse writeResponse))
                     return null;
                 
-                // FIXME deal with failure from releasing the the lock, currently handled in whenUnhandled but could retry to remove: https://github.com/lightbend/akka-commercial-addons/issues/502
+                // FIXME deal with failure from releasing the lock, currently handled in whenUnhandled but could retry to remove: https://github.com/lightbend/akka-commercial-addons/issues/502
                 var response = writeResponse.Response;
                 var data = (OperationInProgress) @event.StateData;
                 var who = data.ReplyTo;

@@ -44,6 +44,9 @@ namespace Akka.Coordination.KubernetesApi
         public DateTime Time { get; }
         
         public bool IsTaken => Owner != null;
+        
+        public override string ToString()
+            => $"{{owner:{Owner}, version:{Version}, time:{Time}}}";
     }
     
 }

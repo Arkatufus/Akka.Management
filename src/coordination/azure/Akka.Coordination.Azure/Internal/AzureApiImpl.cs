@@ -107,12 +107,6 @@ namespace Akka.Coordination.Azure.Internal
                         cancellationToken: cts.Token)
                     .ConfigureAwait(false);
 
-                var response = operationResponse.GetRawResponse();
-                if (response.IsError)
-                    throw new LeaseException(
-                        $"Failed to update lease [{leaseName}] for [{ownerName}]. " +
-                        $"Reason: [{response.Status}: {response.ReasonPhrase}]");
-                
                 var newLease = ToLeaseResource(leaseBody, operationResponse);
                 _log.Debug("Lease after update: {0}", newLease);
                 return new Right<LeaseResource, LeaseResource>(newLease);

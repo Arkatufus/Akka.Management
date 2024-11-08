@@ -42,6 +42,9 @@ namespace Akka.Coordination.Azure
                 return (Owner.GetHashCode() * 397) ^ Time.GetHashCode();
             }
         }
+
+        public override string ToString()
+            => $"{{ owner: {Owner}, time: {Time} }}";
     }
     
     internal sealed class LeaseResource : IEquatable<LeaseResource>
@@ -65,9 +68,8 @@ namespace Akka.Coordination.Azure
             Time = body.Time;
         }
 
-
         public override string ToString()
-            => $"[LeaseResource] Owner: {Owner}, Version: {Version}, Time: {Time}";
+            => $"{{ owner: {Owner}, version: {Version}, time: {Time} }}";
 
         public bool Equals(LeaseResource? other)
         {

@@ -224,7 +224,7 @@ namespace Akka.Coordination.Azure
             
             When(Idle.Instance, evt =>
             {
-                if (!(evt.FsmEvent is Acquire acquire))
+                if (evt.FsmEvent is not Acquire acquire)
                 {
                     if(_log.IsDebugEnabled)
                         _log.Debug($"[Idle] Received event is not Acquire. Received: [{evt.FsmEvent.GetType()}]");
@@ -256,7 +256,7 @@ namespace Akka.Coordination.Azure
             
             When(PendingRead.Instance, @event =>
             {
-                if(!(@event.FsmEvent is ReadResponse evt))
+                if(@event.FsmEvent is not ReadResponse evt)
                 {
                     if(_log.IsDebugEnabled)
                         _log.Debug($"[PendingRead] Received event is not ReadResponse. Received: [{@event.FsmEvent.GetType()}]");
@@ -318,7 +318,7 @@ namespace Akka.Coordination.Azure
             
             When(Granting.Instance, @event =>
             {
-                if (!(@event.FsmEvent is WriteResponse writeResponse))
+                if (@event.FsmEvent is not WriteResponse writeResponse)
                 {
                     if(_log.IsDebugEnabled)
                         _log.Debug($"[Granting] Received event is not WriteResponse. Received: [{@event.FsmEvent.GetType()}]");
@@ -372,7 +372,7 @@ namespace Akka.Coordination.Azure
 
             When(Granted.Instance, evt =>
             {
-                if (!(evt.StateData is GrantedVersion gv))
+                if (evt.StateData is not GrantedVersion gv)
                     return null;
                 
                 var version = gv.Version;
@@ -427,7 +427,7 @@ namespace Akka.Coordination.Azure
                 if (!(@event.FsmEvent is WriteResponse writeResponse))
                     return null;
                 
-                // FIXME deal with failure from releasing the the lock, currently handled in whenUnhandled but could retry to remove: https://github.com/lightbend/akka-commercial-addons/issues/502
+                // FIXME deal with failure from releasing the lock, currently handled in whenUnhandled but could retry to remove: https://github.com/lightbend/akka-commercial-addons/issues/502
                 var response = writeResponse.Response;
                 var data = (OperationInProgress) @event.StateData;
                 var who = data.ReplyTo;
@@ -510,6 +510,18 @@ namespace Akka.Coordination.Azure
             });
             
             Initialize();
+        }
+
+        protected override void PostRestart(Exception reason)
+        {
+            _log.Error(reason, "Actor restarted");
+            base.PostRestart(reason);
+        }
+
+        protected override void PostStop()
+        {
+            _log.Error("Actor stopped");
+            base.PostStop();
         }
 
         protected override void PreStart()

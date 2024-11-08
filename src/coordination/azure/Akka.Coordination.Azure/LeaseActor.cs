@@ -365,7 +365,10 @@ namespace Akka.Coordination.Azure
                         .PipeTo(Self, failure: FlattenAggregateException);
                     return Stay();
                 }
+                
                 // The audacity, someone else has taken the lease :(
+                if(_log.IsDebugEnabled)
+                    _log.Debug("Lease {0} for {1} already taken by {2}", leaseName, _ownerName, leftResponse.Owner);
                 who.Tell(LeaseTaken.Instance);
                 return GoTo(Idle.Instance).Using(ReadRequired.Instance);
             });
@@ -381,7 +384,8 @@ namespace Akka.Coordination.Azure
                 switch (evt.FsmEvent)
                 {
                     case Heartbeat _:
-                        _log.Debug("Heartbeat: updating lease time. Version {0}", version);
+                        if(_log.IsDebugEnabled)
+                            _log.Debug("Heartbeat: updating lease time. Version {0}", version);
                         _client.UpdateLeaseResource(leaseName, _ownerName, version)
                             .ContinueWith(t => new WriteResponse(t.Result))
                             .PipeTo(Self, failure: FlattenAggregateException);
@@ -390,7 +394,8 @@ namespace Akka.Coordination.Azure
                     case WriteResponse {Response: Right<LeaseResource, LeaseResource> resource}:
                         if (!resource.Value.Owner?.Contains(_ownerName) ?? false)
                             throw new LeaseException($"response from API server has different owner for success: {resource}");
-                        _log.Debug("Heartbeat: lease time updated: Version {0}", resource.Value.Version);
+                        if(_log.IsDebugEnabled)
+                            _log.Debug("Heartbeat: lease time updated: Version {0}", resource.Value.Version);
                         Timers!.StartSingleTimer("heartbeat", Heartbeat.Instance, settings.TimeoutSettings.HeartbeatInterval);
                         return Stay().Using(gv.Copy(version: resource.Value.Version));
                     
@@ -409,8 +414,7 @@ namespace Akka.Coordination.Azure
                         
                     case Release _:
                         _client.UpdateLeaseResource(leaseName, "", version)
-                            .ContinueWith(t => new WriteResponse(t.Result))
-                            .PipeTo(Self, failure: FlattenAggregateException);
+                            .PipeTo(Self, success: result => new WriteResponse(result), failure: FlattenAggregateException);
                         return GoTo(Releasing.Instance).Using(new OperationInProgress(Sender, version, leaseLost));
                     
                     case Acquire acquire:
@@ -512,18 +516,6 @@ namespace Akka.Coordination.Azure
             Initialize();
         }
 
-        protected override void PostRestart(Exception reason)
-        {
-            _log.Error(reason, "Actor restarted");
-            base.PostRestart(reason);
-        }
-
-        protected override void PostStop()
-        {
-            _log.Error("Actor stopped");
-            base.PostStop();
-        }
-
         protected override void PreStart()
         {
             if(_log.IsDebugEnabled)
@@ -558,8 +550,7 @@ namespace Akka.Coordination.Azure
         private State<IState, IData> TryGetLease(ETag version, IActorRef reply, Action<Exception?> leaseLost)
         {
             _client.UpdateLeaseResource(_leaseName, _ownerName, version)
-                .ContinueWith(t => new WriteResponse(t.Result))
-                .PipeTo(Self, failure: FlattenAggregateException);
+                .PipeTo(Self, success: result => new WriteResponse(result), failure: FlattenAggregateException);
             return GoTo(Granting.Instance).Using(new OperationInProgress(reply, version, leaseLost));
         }
 

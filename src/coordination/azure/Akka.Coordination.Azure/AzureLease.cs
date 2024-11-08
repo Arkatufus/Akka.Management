@@ -146,9 +146,6 @@ namespace Akka.Coordination.Azure
                     var result = await _leaseActor.Ask(new LeaseActor.Acquire(leaseLostCallback), cts.Token);
                     cts.Token.ThrowIfCancellationRequested();
 
-                    if (result is LeaseActor.LeaseTaken)
-                        _log.Error("Lease {0} for {1} already taken", _leaseName, _settings.OwnerName);
-
                     return result switch
                     {
                         LeaseActor.LeaseAcquired => true,

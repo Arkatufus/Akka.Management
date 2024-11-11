@@ -1,3 +1,11 @@
+#### 1.5.31 November 11th 2024 ####
+
+* Update to [Akka.NET v1.5.31](https://github.com/akkadotnet/akka.net/releases/tag/1.5.31)
+* Update to [Akka.Hosting v1.5.31](https://github.com/akkadotnet/Akka.Hosting/releases/tag/1.5.31)
+* [Coordination.Azure: Fix LeaseActor bugs](https://github.com/akkadotnet/Akka.Management/pull/2891)
+* [Coordination.Azure: Fix AzureLease bugs](https://github.com/akkadotnet/Akka.Management/pull/2890)
+* [Coordination.KubernetesApi: Modernize codes](https://github.com/akkadotnet/Akka.Management/pull/2898)
+
 #### 1.5.30 October 3rd 2024 ####
 
 * Update to [Akka.NET v1.5.30](https://github.com/akkadotnet/akka.net/releases/tag/1.5.30)

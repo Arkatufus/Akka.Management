@@ -15,6 +15,7 @@
         <PackageReference Include="Akka.Cluster.Hosting" Version="$(AkkaHostingVersion)" />
         <PackageReference Include="Petabridge.Cmd.Cluster" Version="$(PbmVersion)" />
         <PackageReference Include="Petabridge.Cmd.Remote" Version="$(PbmVersion)" />
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.0" />
     </ItemGroup>
 
     <ItemGroup>

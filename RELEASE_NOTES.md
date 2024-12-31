@@ -1,3 +1,17 @@
+#### 1.5.33 December 31st 2024 ####
+
+* Update to [Akka.NET v1.5.33](https://github.com/akkadotnet/akka.net/releases/tag/1.5.33)
+* Update to [Akka.Hosting v1.5.33](https://github.com/akkadotnet/Akka.Hosting/releases/tag/1.5.33)
+* [Bump Azure.Storage.Blobs to 12.23.0](https://github.com/akkadotnet/Akka.Management/pull/2909)
+* [Bump Azure.Identity to 1.13.1](https://github.com/akkadotnet/Akka.Management/pull/2948)
+* [Bump Azure.Data.Tables to 12.9.1](https://github.com/akkadotnet/Akka.Management/pull/2774)
+* [Bump Grpc.Tools to 2.68.1](https://github.com/akkadotnet/Akka.Management/pull/2970)
+* [Bump AWSSDK.ECS to 3.8.408.5](https://github.com/akkadotnet/Akka.Management/pull/3024)
+* [Bump AWSSDK.EC2 to 3.7.425.6](https://github.com/akkadotnet/Akka.Management/pull/3023)
+* [Bump AWSSDK.S3 to 3.7.410.12](https://github.com/akkadotnet/Akka.Management/pull/3021)
+* [Bump AWSSDK.CloudFormation to 3.7.401.17](https://github.com/akkadotnet/Akka.Management/pull/3022)
+* [Discovery.Azure: Fix improper `AzureDiscoveryGuardian` child creation](https://github.com/akkadotnet/Akka.Management/pull/3019)
+
 #### 1.5.31 November 11th 2024 ####
 
 * Update to [Akka.NET v1.5.31](https://github.com/akkadotnet/akka.net/releases/tag/1.5.31)

@@ -1,6 +1,6 @@
 <Project>
     <PropertyGroup>
-        <Copyright>Copyright © 2013-2021 Akka.NET Team</Copyright>
+        <Copyright>Copyright © 2013-2025 Akka.NET Team</Copyright>
         <Authors>Akka.NET Team</Authors>
         <VersionPrefix>0.2.2</VersionPrefix>
         <PackageReleaseNotes>Update to [Akka.NET v1.4.26](https://github.com/akkadotnet/akka.net/releases/tag/1.4.26)

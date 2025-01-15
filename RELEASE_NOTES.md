@@ -1,3 +1,10 @@
+#### 1.5.35 January 15th 2025 ####
+
+* Update to [Akka.NET v1.5.35](https://github.com/akkadotnet/akka.net/releases/tag/1.5.35)
+* Update to [Akka.Hosting v1.5.35](https://github.com/akkadotnet/Akka.Hosting/releases/tag/1.5.35)
+* [Bump all Microsoft.Extensions.* dependency to 8.0.x](https://github.com/akkadotnet/Akka.Management/pull/3065)
+* [Bump AWSSDK.S3 to 3.7.411.6](https://github.com/akkadotnet/Akka.Management/pull/3021)
+
 #### 1.5.33 December 31st 2024 ####
 
 * Update to [Akka.NET v1.5.33](https://github.com/akkadotnet/akka.net/releases/tag/1.5.33)

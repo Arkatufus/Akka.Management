@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>$(LibraryFramework)</TargetFramework>
+    <TargetFrameworks>$(LibraryFramework);$(NetFramework)</TargetFrameworks>
 		<Description>Akka.NET coordination module for Microsoft Azure</Description>
 		<PackageTags>$(AkkaPackageTags);Azure;</PackageTags>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>

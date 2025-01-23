@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netstandard2.0</TargetFramework>
+        <TargetFrameworks>$(LibraryFramework);$(NetFramework)</TargetFrameworks>
         <Description>Akka.NET Service Discovery for Azure-hosted services. Works with App Service, Container Apps, and more.</Description>
         <PackageTags>$(AkkaPackageTags);Azure;AppService;Service Discovery;Azure Table Storage</PackageTags>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>

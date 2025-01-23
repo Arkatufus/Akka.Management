@@ -1,4 +1,5 @@
 #### 1.5.37 January 23rd 2025 ####
+
 * Update to [Akka.NET v1.5.37](https://github.com/akkadotnet/akka.net/releases/tag/1.5.35)
 * Update to [Akka.Hosting v1.5.37](https://github.com/akkadotnet/Akka.Hosting/releases/tag/1.5.35)
 * [Revert: Bump all Microsoft.Extensions.* dependency to 8.0.x](https://github.com/akkadotnet/Akka.Management/pull/3105)

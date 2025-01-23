@@ -1,3 +1,11 @@
+#### 1.5.37 January 23rd 2025 ####
+
+* Update to [Akka.NET v1.5.37](https://github.com/akkadotnet/akka.net/releases/tag/1.5.35)
+* Update to [Akka.Hosting v1.5.37](https://github.com/akkadotnet/Akka.Hosting/releases/tag/1.5.35)
+* [Revert: Bump all Microsoft.Extensions.* dependency to 8.0.x](https://github.com/akkadotnet/Akka.Management/pull/3105)
+* [Bump Azure.Identity to 1.13.2](https://github.com/akkadotnet/Akka.Management/pull/3076)
+* [Bump Grpc.Tools to 2.69.0](https://github.com/akkadotnet/Akka.Management/pull/3050)
+
 #### 1.5.35 January 15th 2025 ####
 
 * Update to [Akka.NET v1.5.35](https://github.com/akkadotnet/akka.net/releases/tag/1.5.35)
